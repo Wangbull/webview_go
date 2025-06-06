@@ -2,6 +2,7 @@ package webview
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -38,6 +39,8 @@ func Example() {
 			</script>
 		</html>
 	)`)
+	controller := w.BrowserController()
+	fmt.Println(controller)
 	w.Run()
 }
 

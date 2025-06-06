@@ -22,15 +22,16 @@ package webview
 void CgoWebViewDispatch(webview_t w, uintptr_t arg);
 void CgoWebViewBind(webview_t w, const char *name, uintptr_t index);
 void CgoWebViewUnbind(webview_t w, const char *name);
+void* CgoWebViewBrowserController(webview_t w);
 */
 import "C"
 import (
-	_ "github.com/webview/webview_go/libs/mswebview2"
-	_ "github.com/webview/webview_go/libs/mswebview2/include"
-	_ "github.com/webview/webview_go/libs/webview"
-	_ "github.com/webview/webview_go/libs/webview/include"
 	"encoding/json"
 	"errors"
+	_ "github.com/Wangbull/webview_go/libs/mswebview2"
+	_ "github.com/Wangbull/webview_go/libs/mswebview2/include"
+	_ "github.com/Wangbull/webview_go/libs/webview"
+	_ "github.com/Wangbull/webview_go/libs/webview/include"
 	"reflect"
 	"runtime"
 	"sync"
@@ -122,6 +123,8 @@ type WebView interface {
 
 	// Removes a callback that was previously set by Bind.
 	Unbind(name string) error
+
+	BrowserController() unsafe.Pointer
 }
 
 type webview struct {
@@ -156,6 +159,10 @@ func NewWindow(debug bool, window unsafe.Pointer) WebView {
 	w := &webview{}
 	w.w = C.webview_create(boolToInt(debug), window)
 	return w
+}
+
+func (w *webview) BrowserController() unsafe.Pointer {
+	return unsafe.Pointer(C.CgoWebViewBrowserController(w.w))
 }
 
 func (w *webview) Destroy() {

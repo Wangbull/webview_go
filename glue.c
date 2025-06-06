@@ -34,3 +34,8 @@ void CgoWebViewBind(webview_t w, const char *name, uintptr_t index) {
 void CgoWebViewUnbind(webview_t w, const char *name) {
     webview_unbind(w, name);
 }
+
+void * CgoWebViewBrowserController(webview_t w) {
+   void * value = webview_browser_controller(w);
+   return value;
+}
