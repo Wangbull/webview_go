@@ -41,6 +41,7 @@ func Example() {
 	)`)
 	controller := w.BrowserController()
 	fmt.Println(controller)
+	OpenDevTools(controller)
 	w.Run()
 }
 

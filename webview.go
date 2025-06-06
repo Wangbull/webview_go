@@ -12,6 +12,7 @@ package webview
 #cgo darwin LDFLAGS: -framework WebKit -ldl
 
 #cgo windows CXXFLAGS: -DWEBVIEW_EDGE -std=c++14 -I${SRCDIR}/libs/mswebview2/include
+#cgo windows CFLAGS: -I${SRCDIR}/libs/webview/include -I${SRCDIR}/libs/mswebview2/include
 #cgo windows LDFLAGS: -static -ladvapi32 -lole32 -lshell32 -lshlwapi -luser32 -lversion
 
 #include "webview.h"
@@ -23,6 +24,11 @@ void CgoWebViewDispatch(webview_t w, uintptr_t arg);
 void CgoWebViewBind(webview_t w, const char *name, uintptr_t index);
 void CgoWebViewUnbind(webview_t w, const char *name);
 void* CgoWebViewBrowserController(webview_t w);
+
+
+
+void OpenDevTools(void* browser_controller_ptr);
+
 */
 import "C"
 import (
@@ -37,6 +43,10 @@ import (
 	"sync"
 	"unsafe"
 )
+
+func OpenDevTools(controllerPtr unsafe.Pointer) {
+	C.OpenDevTools(controllerPtr)
+}
 
 func init() {
 	// Ensure that main.main is called from the main thread

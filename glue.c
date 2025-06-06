@@ -1,4 +1,5 @@
 #include "webview.h"
+#include "WebView2.h"
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -38,4 +39,19 @@ void CgoWebViewUnbind(webview_t w, const char *name) {
 void * CgoWebViewBrowserController(webview_t w) {
    void * value = webview_browser_controller(w);
    return value;
+}
+
+
+void OpenDevTools(void* browser_controller_ptr) {
+    if (!browser_controller_ptr) return;
+
+      ICoreWebView2Controller* controller = (ICoreWebView2Controller*)browser_controller_ptr;
+      ICoreWebView2* webview = NULL;
+
+      // 通过Vtbl调用方法，传入controller指针（this）
+      HRESULT hr = controller->lpVtbl->get_CoreWebView2(controller, &webview);
+      if (SUCCEEDED(hr) && webview) {
+          webview->lpVtbl->OpenDevToolsWindow(webview);
+          webview->lpVtbl->Release(webview);
+      }
 }
